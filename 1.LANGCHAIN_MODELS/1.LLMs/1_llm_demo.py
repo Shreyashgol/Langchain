@@ -1,10 +1,19 @@
-from langchain_openai import OpenAI
+import os
+
+from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
 
 load_dotenv()
 
-llm = OpenAI(model='gpt-3.5-turbo-instruct')
+api_key = os.getenv("OPENAI_API_KEY")
+if not api_key:
+    raise RuntimeError(
+        "Missing OPENAI_API_KEY. Add it to your environment or a .env file before running this demo."
+    )
 
-result = llm.invoke("What is the capital of India")
+model_name = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+llm = ChatOpenAI(model=model_name, temperature=0)
 
-print(result)
+result = llm.invoke("What is the capital of India?")
+
+print(result.content)
